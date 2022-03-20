@@ -212,30 +212,15 @@ sgx_status_t key_derivation(const sgx_ec256_dh_shared_t* shared_key,
 //         for creating a key context.
 
 sgx_status_t enclave_init_ra(
-    int b_pse,
-    sgx_ra_context_t *p_context)
-{
+        int b_pse,
+        sgx_ra_context_t *p_context) {
     // isv enclave call to trusted key exchange library.
     sgx_status_t ret;
-    if(b_pse)
-    {
-        int busy_retry_times = 2;
-        do{
-            ret = sgx_create_pse_session();
-        }while (ret == SGX_ERROR_BUSY && busy_retry_times--);
-        if (ret != SGX_SUCCESS)
-            return ret;
-    }
 #ifdef SUPPLIED_KEY_DERIVATION
     ret = sgx_ra_init_ex(&g_sp_pub_key, b_pse, key_derivation, p_context);
 #else
     ret = sgx_ra_init(&g_sp_pub_key, b_pse, p_context);
 #endif
-    if(b_pse)
-    {
-        sgx_close_pse_session();
-        return ret;
-    }
     return ret;
 }
 
@@ -248,11 +233,10 @@ sgx_status_t enclave_init_ra(
 // @return Return value from the key context close API
 
 sgx_status_t SGXAPI enclave_ra_close(
-    sgx_ra_context_t context)
-{
-    sgx_status_t ret;
-    ret = sgx_ra_close(context);
-    return ret;
+        sgx_ra_context_t context) {
+sgx_status_t ret;
+ret = sgx_ra_close(context);
+return ret;
 }
 
 

@@ -225,6 +225,8 @@ int main(int argc, char *argv[])
             return -1;
         }
     }
+
+    // SOCKET: connect to server
     if (client("127.0.0.1", 12333) != 0)
     {
         fprintf(OUTPUT, "Connect Server Error, Exit!\n");
@@ -264,6 +266,7 @@ int main(int argc, char *argv[])
         // The ISV decides whether to support this extended epid group id.
         fprintf(OUTPUT, "\nSending msg0 to remote attestation service provider.\n");
 
+        // SOCKET: send & recv
         ret = ra_network_send_receive("http://SampleServiceProvider.intel.com/",
                                       p_msg0_full,
                                       &p_msg0_resp_full);

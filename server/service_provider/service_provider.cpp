@@ -161,6 +161,8 @@ int sp_ra_proc_msg0_req(const sample_ra_msg0_t *p_msg0,
                 // For a product attestation server, enrollment is an offline process.  See the 'on-boarding'
                 // documentation to get the information required.  The enrollment process is
                 // simulated by a call in this sample.
+
+                // Enroll to get SPID and Report Key
                 ret = g_sp_extended_epid_group_id->enroll(g_sp_credentials, &g_spid,
                     &g_authentication_token);
                 if (0 != ret)
