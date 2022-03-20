@@ -81,7 +81,7 @@ else
 endif
 
 App_Cpp_Files := isv_app/isv_app.cpp
-App_Include_Paths := -Iservice_provider -I$(SGX_SDK)/include -I$(IPP_LIBRARY)/include
+App_Include_Paths := -Iservice_provider -I$(SGX_SDK)/include -I$(IPP_LIBRARY)/include -Iaibe_algorithms
 
 App_C_Flags := $(SGX_COMMON_CFLAGS) -fPIC -Wno-attributes $(App_Include_Paths)
 
@@ -98,7 +98,7 @@ else
 endif
 
 App_Cpp_Flags := $(App_C_Flags) -std=c++11
-App_Link_Flags := $(SGX_COMMON_CFLAGS) -L$(IPP_LIBRARY_PATH) -L$(SGX_LIBRARY_PATH) -l$(Urts_Library_Name) -L. -lsgx_ukey_exchange -lpthread -lservice_provider -Wl,-rpath=$(CURDIR)/sample_libcrypto -Wl,-rpath=$(CURDIR)
+App_Link_Flags := $(SGX_COMMON_CFLAGS) -L$(IPP_LIBRARY_PATH) -L$(SGX_LIBRARY_PATH) -l$(Urts_Library_Name) -L. -lsgx_ukey_exchange -lpthread -lservice_provider -laibe_algorithms -lgmp -lpbc -Wl,-rpath=$(CURDIR)/sample_libcrypto -Wl,-rpath=$(CURDIR)
 
 ifneq ($(SGX_MODE), HW)
 	App_Link_Flags += -lsgx_uae_service_sim
@@ -129,7 +129,7 @@ AibeAlgo_Include_Paths := -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SG
 
 AibeAlgo_C_Flags := $(SGX_COMMON_CFLAGS) -fPIC -Wno-attributes -I$(SGX_SDK)/include -Isample_libcrypto
 AibeAlgo_Cpp_Flags := $(AibeAlgo_C_Flags) -std=c++11
-AibeAlgo_Link_Flags :=  -shared $(SGX_COMMON_CFLAGS) -L$(SGX_LIBRARY_PATH) -lsample_libcrypto -Lsample_libcrypto -Lcrypto -lgmp -lpbc
+AibeAlgo_Link_Flags :=  -shared $(SGX_COMMON_CFLAGS) -L$(SGX_LIBRARY_PATH) -lsample_libcrypto -Lsample_libcrypto -Lcrypto -L. -lgmp -lpbc
 
 AibeAlgo_Cpp_Objects := $(AibeAlgo_Cpp_Files:.cpp=.o)
 
