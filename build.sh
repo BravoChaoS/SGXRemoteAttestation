@@ -1,6 +1,6 @@
 #！/usr/bin/bash
 
-source /home/u/Desktop/sgx/sgxsdk/environment
+source /opt/intel/sgxsdk/environment
 
 cd client
 make clean
