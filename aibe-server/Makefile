@@ -31,10 +31,11 @@
 
 ######## SGX SDK Settings ########
 
-SGX_SDK ?= /opt/intel/sgx/sgxsdk
+SGX_SDK ?= /opt/intel/sgxsdk
 SGX_MODE ?= SIM
 SGX_ARCH ?= x64
 SGX_DEBUG ?= 1
+IPP_LIBRARY ?= /opt/intel/ippcp
 
 ifeq ($(shell getconf LONG_BIT), 32)
 	SGX_ARCH := x86
@@ -47,11 +48,13 @@ ifeq ($(SGX_ARCH), x86)
 	SGX_LIBRARY_PATH := $(SGX_SDK)/lib
 	SGX_ENCLAVE_SIGNER := $(SGX_SDK)/bin/x86/sgx_sign
 	SGX_EDGER8R := $(SGX_SDK)/bin/x86/sgx_edger8r
+        IPP_LIBRARY_PATH := $(IPP_LIBRARY)/lib/ia32
 else
 	SGX_COMMON_CFLAGS := -m64
 	SGX_LIBRARY_PATH := $(SGX_SDK)/lib64
 	SGX_ENCLAVE_SIGNER := $(SGX_SDK)/bin/x64/sgx_sign
 	SGX_EDGER8R := $(SGX_SDK)/bin/x64/sgx_edger8r
+        IPP_LIBRARY_PATH := $(IPP_LIBRARY)/lib/intel64
 endif
 
 ifeq ($(SGX_DEBUG), 1)
@@ -78,7 +81,7 @@ else
 endif
 
 App_Cpp_Files := isv_app/isv_app.cpp
-App_Include_Paths := -Iservice_provider -I$(SGX_SDK)/include
+App_Include_Paths := -Iservice_provider -I$(SGX_SDK)/include -I$(IPP_LIBRARY)/include
 
 App_C_Flags := $(SGX_COMMON_CFLAGS) -fPIC -Wno-attributes $(App_Include_Paths)
 
@@ -95,7 +98,7 @@ else
 endif
 
 App_Cpp_Flags := $(App_C_Flags) -std=c++11
-App_Link_Flags := $(SGX_COMMON_CFLAGS) -L$(SGX_LIBRARY_PATH) -l$(Urts_Library_Name) -L. -lsgx_ukey_exchange -lpthread -lservice_provider -Wl,-rpath=$(CURDIR)/sample_libcrypto -Wl,-rpath=$(CURDIR)
+App_Link_Flags := $(SGX_COMMON_CFLAGS) -L$(IPP_LIBRARY_PATH) -L$(SGX_LIBRARY_PATH) -l$(Urts_Library_Name) -L. -lsgx_ukey_exchange -lpthread -lservice_provider -Wl,-rpath=$(CURDIR)/sample_libcrypto -Wl,-rpath=$(CURDIR)
 
 ifneq ($(SGX_MODE), HW)
 	App_Link_Flags += -lsgx_uae_service_sim
